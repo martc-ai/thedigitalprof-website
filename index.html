@@ -110,17 +110,18 @@
       display: inline-flex;
       align-items: center;
       gap: 10px;
-      background: var(--accent);
-      color: var(--accent-ink);
+      background: var(--surface);
+      color: var(--accent);
+      border: 1.5px solid #f1c7b4;
       text-decoration: none;
       font-weight: 600;
-      padding: 14px 22px;
+      padding: 13px 22px;
       border-radius: 999px;
-      box-shadow: var(--shadow-md);
-      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
       font-size: 15px;
     }
-    .cta:hover { transform: translateY(-1px); box-shadow: var(--shadow-lg); background: #c96a4c; }
+    .cta:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); border-color: var(--accent); }
     .cta:active { transform: translateY(0); }
     .cta svg { width: 18px; height: 18px; }
 
@@ -172,7 +173,17 @@
       gap: 14px;
     }
     @media (min-width: 520px) {
-      .products { grid-template-columns: 1fr 1fr; }
+      .products { grid-template-columns: repeat(3, 1fr); }
+      .card.featured { grid-column: 1 / -1; }
+    }
+
+    .featured .product-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px 24px;
+    }
+    @media (min-width: 520px) {
+      .featured .product-list { grid-template-columns: 1fr 1fr; }
     }
 
     .card {
@@ -188,7 +199,21 @@
       position: relative;
       overflow: hidden;
     }
-    .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+    /* Featured (available) card — the hero offer */
+    .card.featured {
+      border-color: #f1c7b4;
+      box-shadow: var(--shadow-md);
+      background: linear-gradient(180deg, #fffaf6, var(--surface) 140px);
+    }
+    .card.featured::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent), #f3a987);
+    }
 
     .card-icon {
       width: 42px;
@@ -202,6 +227,12 @@
       margin-bottom: 4px;
     }
     .card-icon svg { width: 22px; height: 22px; }
+
+    /* Coming-soon cards are de-emphasised so the live offer leads */
+    .card:not(.featured) .card-icon {
+      background: #f1ece4;
+      color: var(--muted);
+    }
 
     .card h3 {
       font-size: 16px;
@@ -223,10 +254,88 @@
       letter-spacing: -0.01em;
     }
 
+    .product-list {
+      margin: 4px 0 0;
+      padding: 0;
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .product-list li {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+      line-height: 1.35;
+      padding: 8px 10px;
+      border-radius: var(--radius-sm);
+      background: var(--surface-2);
+      border: 1px solid var(--line);
+    }
+    .product-list .item-icon {
+      flex: 0 0 auto;
+      width: 32px;
+      height: 32px;
+      border-radius: 9px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .product-list .item-icon svg { width: 17px; height: 17px; }
+
+    /* Prominent shop buttons in the featured card */
+    .featured .links-prompt {
+      margin: 4px 0 0;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .featured .card-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      padding-top: 4px;
+    }
+    .featured .card-links .card-link {
+      justify-content: center;
+      font-size: 15px;
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+    }
+    .featured .card-links .card-link svg { width: 18px; height: 18px; }
+    @media (max-width: 400px) {
+      .featured .card-links { grid-template-columns: 1fr; }
+    }
+
     .card-note {
       margin: 0;
       font-size: 12.5px;
       color: var(--muted);
+    }
+
+    .list-label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 8px 0 2px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .list-label::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--line);
     }
 
     /* Force a row break in the Connect list */
@@ -242,8 +351,8 @@
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--accent);
-      background: var(--accent-soft);
+      color: var(--muted);
+      background: #f1ece4;
       padding: 5px 10px;
       border-radius: 999px;
     }
@@ -251,6 +360,16 @@
     .badge.live {
       color: #2f7d55;
       background: #e6f4ec;
+    }
+    .badge.live::before {
+      content: "";
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #2f9c63;
+      margin-right: 6px;
+      vertical-align: middle;
     }
 
     .card-links {
@@ -353,7 +472,7 @@
           TikTok
         </a>
         <span class="row-break" aria-hidden="true"></span>
-        <a class="social" href="https://www.etsy.com/shop/TheDigitalProf" target="_blank" rel="noopener noreferrer" aria-label="Etsy shop — TheDigitalProf">
+        <a class="social" href="https://www.etsy.com/uk/shop/TheDigitalProf" target="_blank" rel="noopener noreferrer" aria-label="Etsy shop — TheDigitalProf">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="9" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle>
             <path d="M3 4h2l2.4 12.2a1.5 1.5 0 0 0 1.5 1.2h8.7a1.5 1.5 0 0 0 1.5-1.2L21 8H6"></path>
@@ -373,6 +492,93 @@
     <section id="products" aria-labelledby="products-title">
       <h2 id="products-title" class="section-title">Explore products</h2>
       <div class="products">
+        <article class="card featured">
+          <div class="card-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 4h12l4 4v12H4z"></path><path d="M16 4v4h4"></path>
+              <path d="M8 13h8"></path><path d="M8 17h5"></path>
+            </svg>
+          </div>
+          <h3>Career toolkit</h3>
+          <p>Resume, cover letter, and interview prep templates designed to get you hired faster.</p>
+          <span class="badge live">Available now</span>
+          <p class="list-label">6 templates available</p>
+          <ul class="product-list">
+            <li>
+              <span class="item-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 4h12v4a6 6 0 0 1-12 0z"></path>
+                  <path d="M6 6H4a2 2 0 0 0 0 4h2"></path>
+                  <path d="M18 6h2a2 2 0 0 1 0 4h-2"></path>
+                  <path d="M9 18h6"></path><path d="M12 14v4"></path>
+                </svg>
+              </span>
+              <span>Promotion &amp; Performance Review Toolkit (Brag Sheet!)</span>
+            </li>
+            <li>
+              <span class="item-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3v18"></path><path d="M5 7h14"></path>
+                  <path d="M5 7 2.5 13a3 3 0 0 0 5 0z"></path>
+                  <path d="M19 7l-2.5 6a3 3 0 0 0 5 0z"></path>
+                  <path d="M8 21h8"></path>
+                </svg>
+              </span>
+              <span>Job Offer Comparison Calculator</span>
+            </li>
+            <li>
+              <span class="item-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m8 8-4 4 4 4"></path><path d="m16 8 4 4-4 4"></path>
+                </svg>
+              </span>
+              <span>Software Engineer STAR Interview Workbook — Behavioral Interview Prep Toolkit</span>
+            </li>
+            <li>
+              <span class="item-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <circle cx="12" cy="12" r="9"></circle>
+                  <path d="M12 8v8"></path><path d="M8 12h8"></path>
+                </svg>
+              </span>
+              <span>NHS Healthcare Assistant Interview Workbook — HCA Interview Prep Toolkit</span>
+            </li>
+            <li>
+              <span class="item-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M3 12h4l2-6 4 12 2-6h6"></path>
+                </svg>
+              </span>
+              <span>NHS Nurse STAR Interview Workbook — Band 5/6 Interview Prep Toolkit</span>
+            </li>
+            <li>
+              <span class="item-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3l2.5 5 5.5.8-4 3.9 1 5.5L12 15.7 7 18.1l1-5.5-4-3.9L9.5 8z"></path>
+                </svg>
+              </span>
+              <span>STAR Interview Workbook — Behavioral Interview Prep Template &amp; Job Interview Questions &amp; Answer Guide (For All Professionals)</span>
+            </li>
+          </ul>
+          <p class="links-prompt">👇 Get them on Etsy or Gumroad — check the links below!</p>
+          <div class="card-links">
+            <a class="card-link primary" href="https://www.etsy.com/uk/shop/TheDigitalProf" target="_blank" rel="noopener noreferrer" aria-label="Shop on Etsy">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="9" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle>
+                <path d="M3 4h2l2.4 12.2a1.5 1.5 0 0 0 1.5 1.2h8.7a1.5 1.5 0 0 0 1.5-1.2L21 8H6"></path>
+              </svg>
+              Etsy
+            </a>
+            <a class="card-link primary" href="https://thedigitalprof.gumroad.com" target="_blank" rel="noopener noreferrer" aria-label="Shop on Gumroad">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="9"></circle>
+                <path d="M14.5 9.2a3 3 0 1 0 .2 4.6"></path><path d="M14.8 12h-2.3"></path>
+              </svg>
+              Gumroad
+            </a>
+          </div>
+        </article>
+
         <article class="card">
           <div class="card-icon" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -383,36 +589,6 @@
           <h3>Productivity templates</h3>
           <p>Notion and spreadsheet systems to plan your week, track goals, and ship more.</p>
           <span class="badge">Coming soon</span>
-        </article>
-
-        <article class="card">
-          <div class="card-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 4h12l4 4v12H4z"></path><path d="M16 4v4h4"></path>
-              <path d="M8 13h8"></path><path d="M8 17h5"></path>
-            </svg>
-          </div>
-          <h3>Career toolkit</h3>
-          <p>Resume, cover letter, and interview prep templates designed to get you hired faster.</p>
-          <span class="badge live">Available now</span>
-          <p class="product-name">Promotion and Performance Review Toolkit (Brag Sheet!)</p>
-          <p class="card-note">Check the links below — available on Etsy and Gumroad:</p>
-          <div class="card-links">
-            <a class="card-link primary" href="https://www.etsy.com/listing/4507425477/promotion-performance-review-toolkit" target="_blank" rel="noopener noreferrer" aria-label="Buy on Etsy">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="9" cy="20" r="1.4"></circle><circle cx="18" cy="20" r="1.4"></circle>
-                <path d="M3 4h2l2.4 12.2a1.5 1.5 0 0 0 1.5 1.2h8.7a1.5 1.5 0 0 0 1.5-1.2L21 8H6"></path>
-              </svg>
-              Etsy
-            </a>
-            <a class="card-link primary" href="https://thedigitalprof.gumroad.com/l/promotion-toolkit" target="_blank" rel="noopener noreferrer" aria-label="Buy on Gumroad">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <circle cx="12" cy="12" r="9"></circle>
-                <path d="M14.5 9.2a3 3 0 1 0 .2 4.6"></path><path d="M14.8 12h-2.3"></path>
-              </svg>
-              Gumroad
-            </a>
-          </div>
         </article>
 
         <article class="card">
